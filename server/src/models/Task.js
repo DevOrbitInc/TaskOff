@@ -16,7 +16,7 @@ const taskSchema = new mongoose.Schema(
 
     tag: {
       type: String,
-      enum: ["Frontend", "Backend", "Mobile", "Docs"],
+      enum: ["Frontend", "Backend", "Mobile", "Docs"]// we should update type like: work , personal, plaining, other,
       default: "Feature",
     },
 
