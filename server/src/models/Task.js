@@ -10,15 +10,15 @@ const taskSchema = new mongoose.Schema(
 
     status: {
       type: String,
-      enum: ["To Do", "In Progress", "Done"],
-      default: "To Do",
+      enum: ["Todo", "In Progress", "Done"],
+      default: "Todo",
     },
 
-    tag: {
-      type: String,
-      enum: ["Frontend", "Backend", "Mobile", "Docs"],
-      default: "Feature",
-    },
+    // tag: {
+    //   type: String,
+    //   enum: ["Work", "Personal", "Planning", "Study","Other"],
+    //   default: "Work",
+    // },
 
     assignee: {
       type: mongoose.Schema.Types.ObjectId,
