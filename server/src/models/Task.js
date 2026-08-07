@@ -14,11 +14,11 @@ const taskSchema = new mongoose.Schema(
       default: "Todo",
     },
 
-    tag: {
-      type: String,
-      enum: ["Work", "Personal", "Planning", "Study","Other"],
-      default: "Work",
-    },
+    // tag: {
+    //   type: String,
+    //   enum: ["Work", "Personal", "Planning", "Study","Other"],
+    //   default: "Work",
+    // },
 
     assignee: {
       type: mongoose.Schema.Types.ObjectId,
