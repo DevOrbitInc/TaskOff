@@ -10,14 +10,14 @@ const taskSchema = new mongoose.Schema(
 
     status: {
       type: String,
-      enum: ["To Do", "In Progress", "Done"],
-      default: "To Do",
+      enum: ["Todo", "In Progress", "Done"],
+      default: "Todo",
     },
 
     tag: {
       type: String,
-      enum: ["Frontend", "Backend", "Mobile", "Docs"],// we should update type like: work , personal, plaining, other,
-      default: "Feature",
+      enum: ["Work", "Personal", "Planning", "Study","Other"],
+      default: "Work",
     },
 
     assignee: {
