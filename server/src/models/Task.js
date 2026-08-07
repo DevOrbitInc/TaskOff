@@ -16,7 +16,7 @@ const taskSchema = new mongoose.Schema(
 
     tag: {
       type: String,
-      enum: ["Bug", "Feature", "Improvement"],
+      enum: ["Frontend", "Backend", "Mobile", "Docs"],
       default: "Feature",
     },
 
