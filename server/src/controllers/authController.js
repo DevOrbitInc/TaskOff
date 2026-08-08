@@ -1,47 +1,37 @@
 const bcrypt = require("bcryptjs");
 const User = require("../models/User");
 const { generateToken } = require("../utils/generateToken");
+const ApiError = require("../utils/ApiError");
 
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const PASSWORD_REGEX = /^(?=.*[A-Za-z])(?=.*\d).+$/; // at least one letter and one number
+// Input shape/format (required fields, email format, password length) is
+// already validated by validate() + validators/auth.validator.js before
+// these handlers run. This file only does things Zod can't: checking the
+// database and hashing/comparing the password.
 
-async function register(req, res) {
+async function register(req, res, next) {
   try {
     const { fullName, email, password } = req.body;
 
-    if (!fullName || !email || !password) {
-      return res.status(400).json({ message: "fullName, email and password are required." });
-    }
-
-    if (!EMAIL_REGEX.test(email)) {
-      return res.status(400).json({ message: "Please provide a valid email address." });
-    }
-
-    if (password.length < 6) {
-      return res.status(400).json({ message: "Password must be at least 6 characters long." });
-    }
-
-    if (!PASSWORD_REGEX.test(password)) {
-      return res.status(400).json({ message: "Password must contain at least one letter and one number." });
-    }
-
-    const existingUser = await User.findOne({ email: email.toLowerCase() });
+    const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(409).json({ message: "An account with this email already exists." });
+      return next(ApiError.conflict("An account with this email already exists.", [
+        { field: "email", message: "This email is already registered." },
+      ]));
     }
 
     const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
+    const passwordHash = await bcrypt.hash(password, salt);
 
     const user = await User.create({
       fullName,
       email,
-      password: hashedPassword,
+      passwordHash,
     });
 
     const token = generateToken(user._id);
 
     return res.status(201).json({
+      success: true,
       token,
       user: {
         id: user._id,
@@ -50,31 +40,28 @@ async function register(req, res) {
       },
     });
   } catch (error) {
-    return res.status(500).json({ message: "Registration failed.", error: error.message });
+    return next(error);
   }
 }
 
-async function login(req, res) {
+async function login(req, res, next) {
   try {
     const { email, password } = req.body;
 
-    if (!email || !password) {
-      return res.status(400).json({ message: "email and password are required." });
-    }
-
-    const user = await User.findOne({ email: email.toLowerCase() });
+    const user = await User.findOne({ email });
     if (!user) {
-      return res.status(401).json({ message: "Invalid email or password." });
+      return next(ApiError.unauthorized("Invalid email or password."));
     }
 
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+    const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
     if (!isPasswordValid) {
-      return res.status(401).json({ message: "Invalid email or password." });
+      return next(ApiError.unauthorized("Invalid email or password."));
     }
 
     const token = generateToken(user._id);
 
     return res.status(200).json({
+      success: true,
       token,
       user: {
         id: user._id,
@@ -83,7 +70,7 @@ async function login(req, res) {
       },
     });
   } catch (error) {
-    return res.status(500).json({ message: "Login failed.", error: error.message });
+    return next(error);
   }
 }
 

@@ -1,13 +1,14 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const config = require("../config/env");
+const ApiError = require("../utils/ApiError");
 
 async function protect(req, res, next) {
   try {
     const authHeader = req.headers.authorization;
 
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return res.status(401).json({ message: "No token provided. Please log in." });
+      return next(ApiError.unauthorized("No token provided. Please log in."));
     }
 
     const token = authHeader.split(" ")[1];
@@ -16,18 +17,20 @@ async function protect(req, res, next) {
     try {
       decoded = jwt.verify(token, config.jwtSecret);
     } catch (error) {
-      return res.status(401).json({ message: "Invalid or expired token." });
+      // jsonwebtoken errors (TokenExpiredError / JsonWebTokenError) are
+      // translated into friendly messages by the central error handler.
+      return next(error);
     }
 
-    const user = await User.findById(decoded.id).select("-password");
+    const user = await User.findById(decoded.id).select("-passwordHash");
     if (!user) {
-      return res.status(401).json({ message: "User no longer exists." });
+      return next(ApiError.unauthorized("User no longer exists."));
     }
 
     req.user = user;
     next();
   } catch (error) {
-    return res.status(500).json({ message: "Authentication error.", error: error.message });
+    return next(error);
   }
 }
 
