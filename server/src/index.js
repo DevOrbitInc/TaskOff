@@ -1,4 +1,7 @@
 const express = require("express");
+const cors = require("cors");
+const helmet = require("helmet");
+const morgan = require("morgan");
 const config = require("./config/env");
 const connectDB = require("./config/db");
 const notFound = require("./middleware/notFound");
@@ -8,7 +11,19 @@ const app = express();
 
 app.use(express.json());
 
-// Feature routers (auth, tasks) get mounted here, above the two handlers below.
+const authRoutes = require("./routes/authRoutes");
+// const { notFound, errorHandler } = require("./middleware/errorHandler");
+
+const app = express();
+
+app.use(helmet());
+app.use(cors());
+if (config.env !== "production") {
+  app.use(morgan("dev"));
+}
+app.use(express.json());
+
+app.use("/api/auth", authRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
