@@ -5,28 +5,36 @@ const { requiredString, objectId } = require("./common.validator");
 // Read straight off the model so the allowed values can never drift apart
 // from the schema Mongoose actually enforces.
 const TASK_STATUSES = Task.schema.path("status").enumValues;
+const TASK_TAGS = Task.schema.path("tag").enumValues;
 
 const status = z.enum(TASK_STATUSES, {
   error: `Status must be one of: ${TASK_STATUSES.join(", ")}.`,
 });
 
-const task = requiredString("Task")
+const tag = z.enum(TASK_TAGS, {
+  error: `Tag must be one of: ${TASK_TAGS.join(", ")}.`,
+});
+
+
+const title = requiredString("Title")
   .trim()
-  .min(1, "Task is required.")
-  .max(200, "Task must be at most 200 characters.");
+  .min(1, "Title is required.")
+  .max(120, "Title must be at most 120 characters.");
 
 /**
- * `assignee` is deliberately not accepted from the client — the controller
- * sets it from the authenticated user, otherwise anyone could create tasks
- * under someone else's name.
+ * `assignee` is deliberately not accepted in the create/update body — the
+ * controller sets it from the authenticated user, otherwise anyone could
+ * create tasks under someone else's name. Filtering a list by assignee
+ * (below) is read-only and safe.
  */
 const createTaskSchema = z.object({
-  task,
+  title,
   status: status.optional(),
+  tag: tag.optional(),
 });
 
 const updateTaskSchema = z
-  .object({ task, status })
+  .object({ title, status, tag })
   .partial()
   .refine((body) => Object.keys(body).length > 0, {
     error: "Provide at least one field to update.",
@@ -34,7 +42,10 @@ const updateTaskSchema = z
 
 const taskIdParamSchema = z.object({ id: objectId });
 
-const listTasksQuerySchema = z.object({ status: status.optional() });
+const listTasksQuerySchema = z.object({
+  status: status.optional(),
+  assignee: objectId.optional(),
+});
 
 module.exports = {
   createTaskSchema,
