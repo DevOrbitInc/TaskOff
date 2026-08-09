@@ -21,6 +21,9 @@ const title = requiredString("Title")
   .min(1, "Title is required.")
   .max(120, "Title must be at most 120 characters.");
 
+// Empty is allowed on purpose: it is how an update clears a description
+const description = requiredString("Description").trim();
+
 /**
  * `assignee` is deliberately not accepted in the create/update body — the
  * controller sets it from the authenticated user, otherwise anyone could
@@ -29,12 +32,13 @@ const title = requiredString("Title")
  */
 const createTaskSchema = z.object({
   title,
+  description: description.optional(),
   status: status.optional(),
   tag: tag.optional(),
 });
 
 const updateTaskSchema = z
-  .object({ title, status, tag })
+  .object({ title, description, status, tag })
   .partial()
   .refine((body) => Object.keys(body).length > 0, {
     error: "Provide at least one field to update.",
