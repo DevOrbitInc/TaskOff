@@ -31,9 +31,13 @@ async function createTask(req, res, next) {
   try {
     const { title, description, status, tag, assignee } = req.body;
 
-    const lastTask = await Task.findOne().sort({ taskNumber: -1 });
-    const taskNumber = lastTask ? lastTask.taskNumber + 1 : 1;
+    const lastTask = await Task.findOne({
+      taskNumber: { $type: "number" },
+    }).sort({
+      taskNumber: -1,
+    });
 
+    const taskNumber = lastTask ? lastTask.taskNumber + 1 : 1;
     const task = await Task.create({
       taskNumber,
       title,
