@@ -2,6 +2,12 @@ const mongoose = require("mongoose");
 
 const taskSchema = new mongoose.Schema(
   {
+    taskNumber: {
+      type: Number,
+      required: true,
+      unique: true,
+    },
+
     title: {
       type: String,
       required: true,
@@ -18,14 +24,15 @@ const taskSchema = new mongoose.Schema(
 
     status: {
       type: String,
-      enum: ["To do", "In progress", "In review", "Done"],
-      default: "To do",
+      enum: ["Todo", "In Progress", "In Review", "Done"],
+      default: "Todo",
     },
 
     tag: {
       type: String,
-      enum: ["frontend", "backend", "auth", "mobile", "docs"],
-      required: false,
+      trim: true,
+      maxlength: 50,
+      default: null,
     },
 
     assignee: {
