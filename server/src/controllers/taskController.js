@@ -1,5 +1,6 @@
 const Task = require("../models/Task");
 const ApiError = require("../utils/ApiError");
+const Counter = require("../models/Counter");
 
 // GET /api/tasks
 async function getTasks(req, res, next) {
@@ -31,13 +32,13 @@ async function createTask(req, res, next) {
   try {
     const { title, description, status, tag, assignee } = req.body;
 
-    const lastTask = await Task.findOne({
-      taskNumber: { $type: "number" },
-    }).sort({
-      taskNumber: -1,
-    });
+    const counter = await Counter.findOneAndUpdate(
+      { id: "taskSeq" },
+      { $inc: { seq: 1 } },
+      { new: true, upsert: true },
+    );
 
-    const taskNumber = lastTask ? lastTask.taskNumber + 1 : 1;
+    const taskNumber = counter.seq;
     const task = await Task.create({
       taskNumber,
       title,
