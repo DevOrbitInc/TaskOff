@@ -1,22 +1,27 @@
 import api from "./axios";
 
 export const getTasks = async (params) => {
-    return api.get("/tasks", { params });
+    const response = await api.get("/tasks", { params });
+    return response.data;
 };
 
 export const getTask = async (id) => {
-    return api.get(`/tasks/${id}`);
+    const response = await api.get(`/tasks/${id}`);
+    return response.data;
 };
 
 export const createTask = async (taskData) => {
-    return api.post("/tasks", taskData);
+    const response = await api.post("/tasks", taskData);
+    return response.data;
 };
 
 export const updateTask = async (id, taskData) => {
-    return api.put(`/tasks/${id}`, taskData);
+    const response = await api.put(`/tasks/${id}`, taskData);
+    return response.data;
 };
 
 export const deleteTask = async (id) => {
-    return api.delete(`/tasks/${id}`);
+    const response = await api.delete(`/tasks/${id}`);
+    return response.data;
 };
 
