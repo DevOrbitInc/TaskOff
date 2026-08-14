@@ -1,20 +1,19 @@
-import { useContext } from 'react'
-import { Navigate } from 'react-router-dom'
-import AuthContext from '../context/AuthContext.jsx'
-import AppShell from './AppShell.jsx'
+import { Navigate } from "react-router-dom";
+import AppShell from "./AppShell.jsx";
+import useAuth from "../hooks/useAuth.js";
 
 function ProtectedRoute({ children }) {
-  const { isAuthenticated, loading } = useContext(AuthContext)
+  const { isAuthenticated, loading } = useAuth();
 
   if (loading) {
-    return <div>Loading authentication...</div>
+    return <div>Loading authentication...</div>;
   }
 
   if (!isAuthenticated) {
-    return <Navigate to="/login" replace />
+    return <Navigate to="/login" replace />;
   }
 
-  return <AppShell>{children}</AppShell>
+  return <AppShell>{children}</AppShell>;
 }
 
-export default ProtectedRoute
+export default ProtectedRoute;
