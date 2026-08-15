@@ -1,9 +1,10 @@
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
-import { AuthProvider } from './context/AuthContext.jsx'
-import Login from './pages/Login.jsx'
-import Register from './pages/Register.jsx'
-import Dashboard from './pages/Dashboard.jsx'
-import ProtectedRoute from './components/ProtectedRoute.jsx'
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { AuthProvider } from "./context/AuthContext.jsx";
+import Login from "./pages/Login.jsx";
+import Register from "./pages/Register.jsx";
+import Dashboard from "./pages/Dashboard.jsx";
+import ProtectedRoute from "./components/ProtectedRoute.jsx";
+import TestDesignSystem from "./pages/TestDesignSystem.jsx";
 
 function App() {
   return (
@@ -20,12 +21,13 @@ function App() {
               </ProtectedRoute>
             }
           />
-          <Route path="/" element={<Navigate to="/login" replace />} />
-          <Route path="*" element={<Navigate to="/login" replace />} />
+          {/* <Route path="/" element={<Navigate to="/login" replace />} /> */}
+          {/* <Route path="*" element={<Navigate to="/login" replace />} /> */}
+          <Route path="/design" element={<TestDesignSystem />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
-  )
+  );
 }
 
-export default App
+export default App;
