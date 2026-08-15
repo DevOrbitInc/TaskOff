@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">TaskOff</string>
+    <string name="task_list_title">My Tasks</string>
+    <string name="task_list_subtitle">Read-only task overview</string>
+    <string name="task_list_loading">Loading tasks</string>
+    <string name="task_list_empty_title">No tasks yet</string>
+    <string name="task_list_empty_message">Tasks assigned to you will appear here.</string>
+    <string name="task_list_error_title">Tasks are unavailable</string>
+    <string name="task_list_retry">Try again</string>
+    <string name="login_title">Welcome back</string>
+    <string name="login_subtitle">Sign in to view your read-only task list.</string>
+    <string name="login_email_hint">Email</string>
+    <string name="login_password_hint">Password</string>
+    <string name="login_button">Sign in</string>
+    <string name="login_loading">Signing in</string>
 </resources>

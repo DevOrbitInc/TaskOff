@@ -1,7 +1,21 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
 }
+
+// The Android emulator reaches a backend running on the development machine
+// through this address. Override it with -PTASKOFF_API_BASE_URL for a deployed
+// API or a physical device.
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.isFile) {
+    localPropertiesFile.inputStream().use(localProperties::load)
+}
+
+val taskoffApiBaseUrl = providers.gradleProperty("TASKOFF_API_BASE_URL")
+    .orElse(localProperties.getProperty("TASKOFF_API_BASE_URL") ?: "http://10.0.2.2:3000/")
 
 android {
     namespace = "com.devorbit.taskoff"
@@ -15,6 +29,8 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "API_BASE_URL", "\"$taskoffApiBaseUrl\"")
     }
 
     buildTypes {
@@ -35,6 +51,7 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 }
 
@@ -43,6 +60,7 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.recyclerview)
 
     // Architecture Components (MVVM)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
@@ -63,4 +81,6 @@ dependencies {
 
     // Security
     implementation(libs.androidx.security.crypto)
+
+    testImplementation(libs.junit)
 }
