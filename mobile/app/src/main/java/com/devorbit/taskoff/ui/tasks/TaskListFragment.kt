@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.core.view.isVisible
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.devorbit.taskoff.R
 import com.devorbit.taskoff.databinding.FragmentTaskListBinding
@@ -34,6 +35,10 @@ class TaskListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.profileButton.setOnClickListener {
+            findNavController().navigate(R.id.action_taskListFragment_to_profileFragment)
+        }
+
         binding.taskRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.taskRecyclerView.adapter = adapter
         binding.taskRecyclerView.setHasFixedSize(true)
@@ -55,18 +60,27 @@ class TaskListFragment : Fragment() {
         taskStateGroup.isVisible = state is TaskListUiState.Empty || state is TaskListUiState.Error
 
         when (state) {
-            is TaskListUiState.Content -> adapter.submitList(state.tasks)
+            is TaskListUiState.Content -> {
+                adapter.submitList(state.tasks)
+                taskCountText.text = resources.getQuantityString(
+                    R.plurals.task_count,
+                    state.tasks.size,
+                    state.tasks.size
+                )
+            }
             TaskListUiState.Empty -> {
+                taskCountText.setText(R.string.task_count_empty)
                 stateTitleText.setText(R.string.task_list_empty_title)
                 stateMessageText.setText(R.string.task_list_empty_message)
                 retryButton.isVisible = false
             }
             is TaskListUiState.Error -> {
+                taskCountText.setText(R.string.task_count_unavailable)
                 stateTitleText.setText(R.string.task_list_error_title)
                 stateMessageText.text = state.message
                 retryButton.isVisible = true
             }
-            TaskListUiState.Loading -> Unit
+            TaskListUiState.Loading -> taskCountText.setText(R.string.task_count_loading)
         }
     }
 

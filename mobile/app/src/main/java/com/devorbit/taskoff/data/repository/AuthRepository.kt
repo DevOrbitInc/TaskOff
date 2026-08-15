@@ -12,7 +12,7 @@ class AuthRepository(
 ) {
     suspend fun login(email: String, password: String): AuthResponse {
         val response = apiService.login(LoginRequest(email = email, password = password))
-        SessionTokenStore.save(applicationContext, response.token)
+        SessionTokenStore.save(applicationContext, response.token, response.user)
         return response
     }
 }

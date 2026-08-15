@@ -7,10 +7,27 @@
     <string name="task_list_empty_message">Tasks assigned to you will appear here.</string>
     <string name="task_list_error_title">Tasks are unavailable</string>
     <string name="task_list_retry">Try again</string>
+    <string name="login_brand">TO</string>
+    <string name="login_eyebrow">PERSONAL WORKSPACE</string>
+    <string name="login_footer">Your tasks, clearly organized.</string>
+    <string name="task_list_eyebrow">TASKOFF WORKSPACE</string>
+    <string name="task_count_loading">Loading your tasks</string>
+    <string name="task_count_empty">No assigned tasks</string>
+    <string name="task_count_unavailable">Tasks unavailable</string>
+    <plurals name="task_count">
+        <item quantity="one">%d task</item>
+        <item quantity="other">%d tasks</item>
+    </plurals>
     <string name="login_title">Welcome back</string>
     <string name="login_subtitle">Sign in to view your read-only task list.</string>
     <string name="login_email_hint">Email</string>
     <string name="login_password_hint">Password</string>
     <string name="login_button">Sign in</string>
     <string name="login_loading">Signing in</string>
+    <string name="profile_button">Profile</string>
+    <string name="profile_title">Profile</string>
+    <string name="profile_back">Back</string>
+    <string name="profile_logout">Log out</string>
+    <string name="profile_unknown_name">Signed-in user</string>
+    <string name="profile_unknown_email">Account details unavailable</string>
 </resources>
