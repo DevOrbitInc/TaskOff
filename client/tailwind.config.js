@@ -7,6 +7,7 @@ export default {
         ink: "#1D1D1F",
         paper: "#FBFBFD",
         section: "#F5F5F7",
+        muted: "#6E6E73",
         signal: {
           DEFAULT: "#3B6FE0",
           soft: "#EAF0FC",

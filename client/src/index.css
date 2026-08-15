@@ -33,3 +33,9 @@
   font-weight: 500;
   font-display: swap;
 }
+
+@layer base {
+  body {
+    @apply font-medium bg-paper text-ink;
+  }
+}
