@@ -16,6 +16,7 @@ if (localPropertiesFile.isFile) {
 
 val taskoffApiBaseUrl = providers.gradleProperty("TASKOFF_API_BASE_URL")
     .orElse(localProperties.getProperty("TASKOFF_API_BASE_URL") ?: "http://10.0.2.2:3000/")
+    .get()
 
 android {
     namespace = "com.devorbit.taskoff"
