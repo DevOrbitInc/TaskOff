@@ -3,6 +3,7 @@ import { AuthProvider } from "./context/AuthContext.jsx";
 import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
+import Welcome from "./pages/Welcome.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import TestDesignSystem from "./pages/TestDesignSystem.jsx";
 
@@ -24,6 +25,8 @@ function App() {
           {/* <Route path="/" element={<Navigate to="/login" replace />} /> */}
           {/* <Route path="*" element={<Navigate to="/login" replace />} /> */}
           <Route path="/design" element={<TestDesignSystem />} />
+          <Route path="/welcome" element={<Welcome />} />
+          <Route path="taskoff" element={<TaskOff/>}/>
         </Routes>
       </BrowserRouter>
     </AuthProvider>

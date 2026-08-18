@@ -26,7 +26,7 @@ export default function TestDesignSystem() {
 
           <Button variant="danger">Danger</Button>
 
-          <Button variant="ghost-danger">Gost Danger</Button>
+          <Button variant="ghost-danger">Ghost Danger</Button>
 
           <Button size="sm">Small</Button>
         </div>
