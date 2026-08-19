@@ -37,3 +37,11 @@ data class AuthResponse(
     @SerializedName("user")
     val user: User
 )
+
+data class LoginRequest(
+    @SerializedName("email")
+    val email: String,
+
+    @SerializedName("password")
+    val password: String
+)
