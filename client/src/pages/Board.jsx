@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useContext } from "react";
 import { Link } from "react-router-dom";
 import { getTasks, createTask, updateTask, deleteTask } from "../api/tasks.js";
+import { getUsers } from "../api/users.js";
 import AuthContext from "../context/AuthContext.jsx";
 import Button from "../components/ui/Button";
 import { Field, FieldLabel } from "../components/ui/Field";
@@ -64,6 +65,7 @@ export default function Board() {
   const currentUserId = user?.id || user?._id || "";
 
   const [tasks, setTasks] = useState([]);
+  const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -90,23 +92,31 @@ export default function Board() {
     loadTasks();
   }, [loadTasks]);
 
-  const assigneeOptions = [];
-  const assigneeIds = new Set();
-
-  if (currentUserId && user?.fullName) {
-    assigneeOptions.push({ id: currentUserId, name: user.fullName });
-    assigneeIds.add(currentUserId);
-  }
-
-  tasks.forEach((task) => {
-    const id = assigneeId(task.assignee);
-    const name = assigneeName(task.assignee);
-
-    if (id && name !== "Unassigned" && !assigneeIds.has(id)) {
-      assigneeOptions.push({ id, name });
-      assigneeIds.add(id);
+  useEffect(() => {
+    async function loadUsers() {
+      try {
+        const data = await getUsers();
+        setUsers(Array.isArray(data) ? data : data.users || []);
+      } catch (err) {
+        setError(err.message || "Failed to load users");
+      }
     }
-  });
+
+    loadUsers();
+  }, []);
+
+  const assigneeOptions = users.map((assignee) => ({
+    id: assigneeId(assignee),
+    name: assignee.fullName,
+  }));
+
+  if (
+    currentUserId &&
+    user?.fullName &&
+    !assigneeOptions.some((assignee) => assignee.id === currentUserId)
+  ) {
+    assigneeOptions.unshift({ id: currentUserId, name: user.fullName });
+  }
 
   function openCreateModal() {
     setMode("create");
