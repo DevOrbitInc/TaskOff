@@ -61,7 +61,7 @@ const emptyForm = {
 };
 
 export default function Board() {
-  const { user } = useContext(AuthContext) || {};
+  const { user, token, loading: authLoading } = useContext(AuthContext) || {};
   const currentUserId = user?.id || user?._id || "";
 
   const [tasks, setTasks] = useState([]);
@@ -89,10 +89,13 @@ export default function Board() {
   }, []);
 
   useEffect(() => {
+    if (authLoading || !token || !user) return;
     loadTasks();
-  }, [loadTasks]);
+  }, [authLoading, token, user, loadTasks]);
 
   useEffect(() => {
+    if (authLoading || !token || !user) return;
+
     async function loadUsers() {
       try {
         const data = await getUsers();
@@ -103,7 +106,7 @@ export default function Board() {
     }
 
     loadUsers();
-  }, []);
+  }, [authLoading, token, user]);
 
   const assigneeOptions = users.map((assignee) => ({
     id: assigneeId(assignee),
