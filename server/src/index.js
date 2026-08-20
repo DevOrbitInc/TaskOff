@@ -6,6 +6,7 @@ const config = require("./config/env");
 const connectDB = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
 const taskRoutes = require("./routes/taskRoutes");
+const userRoutes = require("./routes/userRoutes");
 const notFound = require("./middleware/notFound");
 const errorHandler = require("./middleware/errorHandler");
 
@@ -20,6 +21,7 @@ app.use(express.json());
 
 app.use("/api/auth", authRoutes);
 app.use("/api/tasks", taskRoutes);
+app.use("/api/users", userRoutes);
 app.use(notFound);
 app.use(errorHandler);
 

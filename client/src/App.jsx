@@ -6,7 +6,7 @@ import Dashboard from "./pages/Dashboard.jsx";
 import Welcome from "./pages/Welcome.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import TestDesignSystem from "./pages/TestDesignSystem.jsx";
-
+import Board from "./pages/Board.jsx";
 function App() {
   return (
     <AuthProvider>
@@ -25,8 +25,8 @@ function App() {
           {/* <Route path="/" element={<Navigate to="/login" replace />} /> */}
           {/* <Route path="*" element={<Navigate to="/login" replace />} /> */}
           <Route path="/design" element={<TestDesignSystem />} />
-          <Route path="/welcome" element={<Welcome />} />
-          <Route path="taskoff" element={<TaskOff/>}/>
+          <Route path="/" element={<Welcome />} />
+          <Route path="/board" element={<Board/>}/>
         </Routes>
       </BrowserRouter>
     </AuthProvider>
