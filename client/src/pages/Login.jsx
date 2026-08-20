@@ -23,7 +23,7 @@ function Login() {
 
     try {
       await login({ email, password })
-      navigate('/dashboard')
+      navigate('/board')
     } catch (err) {
       setLocalError(err.message)
     }
