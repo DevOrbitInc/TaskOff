@@ -6,6 +6,7 @@ import Dashboard from "./pages/Dashboard.jsx";
 import Welcome from "./pages/Welcome.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import TestDesignSystem from "./pages/TestDesignSystem.jsx";
+import ListView from "./pages/ListView.jsx";
 
 function App() {
   return (
@@ -19,6 +20,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/tasks"
+            element={
+              <ProtectedRoute>
+                <ListView />
               </ProtectedRoute>
             }
           />
