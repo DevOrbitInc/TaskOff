@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TaskOff - Task Manager</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            taskoff: {
+              bg: '#F8FAFC',
+              sidebar: '#FFFFFF',
+              card: '#FFFFFF',
+              text: '#0F172A',
+              subtext: '#64748B',
+              primary: '#2563EB',
+              danger: '#EF4444',
+              border: '#E2E8F0'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+  </style>
+</head>
+<body class="bg-taskoff-bg text-taskoff-text min-h-screen flex">
+
+  <!-- SIDEBAR -->
+  <aside class="w-64 bg-taskoff-sidebar border-r border-taskoff-border p-5 flex flex-col justify-between hidden md:flex shrink-0">
+    <div>
+      <div class="flex items-center gap-2.5 mb-8">
+        <div class="w-7 h-7 bg-taskoff-primary rounded-lg flex items-center justify-center text-white font-bold text-sm">✓</div>
+        <span class="text-xl font-bold tracking-tight text-taskoff-text">TaskOff</span>
+      </div>
+
+      <!-- Navigation dynamique -->
+      <nav class="space-y-1">
+        <button id="nav-board" onclick="switchPage('board')" class="w-full flex items-center gap-3 px-3 py-2 rounded-lg font-medium text-sm transition">
+          <i data-lucide="layout-grid" class="w-4 h-4"></i> Board
+        </button>
+        <button id="nav-list" onclick="switchPage('list')" class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-taskoff-subtext hover:bg-slate-50 font-medium text-sm transition">
+          <i data-lucide="list" class="w-4 h-4"></i> List view
+        </button>
+        <button id="nav-my-tasks" onclick="switchPage('my-tasks')" class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-taskoff-subtext hover:bg-slate-50 font-medium text-sm transition">
+          <i data-lucide="check-square" class="w-4 h-4"></i> My tasks
+        </button>
+      </nav>
+    </div>
+
+    <div class="border-t border-taskoff-border pt-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-full bg-blue-100 text-taskoff-primary font-semibold flex items-center justify-center text-xs">DH</div>
+        <div>
+          <div class="text-sm font-semibold text-taskoff-text leading-tight">Doha H.</div>
+          <div class="text-xs text-taskoff-subtext">Frontend</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- CONTENU PRINCIPAL -->
+  <main class="flex-1 flex flex-col min-w-0">
+    <!-- Header -->
+    <header class="h-16 border-b border-taskoff-border bg-white px-8 flex items-center justify-between shrink-0">
+      <div class="flex items-center gap-3">
+        <h1 id="pageTitle" class="text-xl font-bold text-taskoff-text">Board</h1>
+        <span class="text-xs text-taskoff-subtext bg-slate-100 px-2.5 py-0.5 rounded-full font-medium">TaskOff - MVP</span>
+      </div>
+      <button onclick="openModal('create')" class="bg-taskoff-primary hover:bg-blue-700 text-white font-medium text-sm px-4 py-2 rounded-lg flex items-center gap-2 transition shadow-sm">
+        <i data-lucide="plus" class="w-4 h-4"></i> New task
+      </button>
+    </header>
+
+    <!-- PAGE 1: KANBAN BOARD -->
+    <div id="page-board" class="page-content flex-1 p-8 overflow-x-auto">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6 min-w-[1000px]">
+        <div class="flex flex-col gap-3">
+          <div class="flex items-center justify-between text-sm font-semibold text-taskoff-subtext mb-1">
+            <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-slate-400"></span> To do</span>
+            <span id="count-todo" class="bg-slate-200 text-slate-700 text-xs px-2 py-0.5 rounded-full">0</span>
+          </div>
+          <div id="col-todo" class="space-y-3 min-h-[500px]"></div>
+        </div>
+
+        <div class="flex flex-col gap-3">
+          <div class="flex items-center justify-between text-sm font-semibold text-taskoff-subtext mb-1">
+            <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-amber-500"></span> In progress</span>
+            <span id="count-in-progress" class="bg-slate-200 text-slate-700 text-xs px-2 py-0.5 rounded-full">0</span>
+          </div>
+          <div id="col-in-progress" class="space-y-3 min-h-[500px]"></div>
+        </div>
+
+        <div class="flex flex-col gap-3">
+          <div class="flex items-center justify-between text-sm font-semibold text-taskoff-subtext mb-1">
+            <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-blue-500"></span> In review</span>
+            <span id="count-in-review" class="bg-slate-200 text-slate-700 text-xs px-2 py-0.5 rounded-full">0</span>
+          </div>
+          <div id="col-in-review" class="space-y-3 min-h-[500px]"></div>
+        </div>
+
+        <div class="flex flex-col gap-3">
+          <div class="flex items-center justify-between text-sm font-semibold text-taskoff-subtext mb-1">
+            <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> Done</span>
+            <span id="count-done" class="bg-slate-200 text-slate-700 text-xs px-2 py-0.5 rounded-full">0</span>
+          </div>
+          <div id="col-done" class="space-y-3 min-h-[500px]"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE 2 & 3: LIST VIEW & MY TASKS -->
+    <div id="page-list" class="page-content flex-1 p-8 hidden">
+      <div class="bg-white rounded-xl border border-taskoff-border overflow-hidden shadow-sm">
+        <table class="w-full text-left text-sm">
+          <thead class="bg-slate-50 border-b border-taskoff-border text-taskoff-subtext text-xs uppercase">
+            <tr>
+              <th class="px-6 py-3 font-semibold">Task</th>
+              <th class="px-6 py-3 font-semibold">Status</th>
+              <th class="px-6 py-3 font-semibold">Tag</th>
+              <th class="px-6 py-3 font-semibold">Assignee</th>
+            </tr>
+          </thead>
+          <tbody id="listTableBody" class="divide-y divide-taskoff-border"></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <!-- MODALE CREATION / EDITION -->
+  <div id="taskModal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+    <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg p-6 border border-taskoff-border relative">
+      <div class="flex justify-between items-center mb-6">
+        <h2 id="modalTitle" class="text-xl font-bold text-taskoff-text">New task</h2>
+        <button onclick="closeModal()" class="text-taskoff-subtext hover:text-taskoff-text"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+
+      <form id="taskForm" onsubmit="handleFormSubmit(event)" class="space-y-4">
+        <input type="hidden" id="taskId">
+        
+        <div>
+          <label class="block text-xs font-semibold text-taskoff-subtext mb-1 uppercase tracking-wider">Title</label>
+          <input type="text" id="taskTitleInput" required placeholder="e.g. Build create/edit task modal" class="w-full bg-slate-50 border border-taskoff-border rounded-lg px-3.5 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20">
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-taskoff-subtext mb-1 uppercase tracking-wider">Description</label>
+          <textarea id="taskDescInput" rows="3" placeholder="Optional details..." class="w-full bg-slate-50 border border-taskoff-border rounded-lg px-3.5 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 resize-none"></textarea>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-taskoff-subtext mb-1 uppercase tracking-wider">Status</label>
+            <select id="taskStatusSelect" class="w-full bg-slate-50 border border-taskoff-border rounded-lg px-3 py-2 text-sm focus:outline-none">
+              <option value="todo">To do</option>
+              <option value="in-progress">In progress</option>
+              <option value="in-review">In review</option>
+              <option value="done">Done</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-taskoff-subtext mb-1 uppercase tracking-wider">Assignee</label>
+            <select id="taskAssigneeSelect" class="w-full bg-slate-50 border border-taskoff-border rounded-lg px-3 py-2 text-sm focus:outline-none">
+              <option value="Unassigned">Unassigned</option>
+              <option value="Doha H.">Doha H.</option>
+              <option value="Fati T.">Fati T.</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-taskoff-subtext mb-1 uppercase tracking-wider">Tag</label>
+          <input type="text" id="taskTagInput" placeholder="e.g. frontend, backend" class="w-full bg-slate-50 border border-taskoff-border rounded-lg px-3.5 py-2 text-sm focus:outline-none">
+        </div>
+
+        <div class="flex items-center justify-between pt-4 border-t border-taskoff-border mt-6">
+          <button type="button" id="deleteBtn" onclick="deleteTask()" class="text-taskoff-danger hover:text-red-700 text-sm font-semibold flex items-center gap-1 hidden">
+            <i data-lucide="trash-2" class="w-4 h-4"></i> Delete task
+          </button>
+          
+          <div class="flex gap-2 ml-auto">
+            <button type="button" onclick="closeModal()" class="px-4 py-2 rounded-lg text-sm font-semibold text-taskoff-subtext hover:bg-slate-100">Cancel</button>
+            <button type="submit" id="saveBtn" class="px-4 py-2 rounded-lg text-sm font-semibold text-white bg-taskoff-primary hover:bg-blue-700 transition">Create task</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT -->
+  <script>
+    let tasks = [
+      { id: '1', title: 'Build create/edit task modal', description: 'Modal for creating and editing tasks.', status: 'todo', assignee: 'Fati T.', tag: 'frontend' },
+      { id: '2', title: 'Responsive pass on task board', description: 'Ensure board is readable on smaller screen sizes.', status: 'todo', assignee: 'Unassigned', tag: 'UI' },
+      { id: '3', title: 'Deploy backend to Render', description: '', status: 'todo', assignee: 'Unassigned', tag: 'backend' },
+      { id: '4', title: 'Task list view — connect to real API', description: '', status: 'in-progress', assignee: 'Doha H.', tag: 'frontend' },
+      { id: '5', title: 'JWT auth middleware', description: '', status: 'in-progress', assignee: 'Unassigned', tag: 'auth' },
+      { id: '6', title: 'User + Task Mongoose models', description: '', status: 'in-review', assignee: 'Doha H.', tag: 'backend' },
+      { id: '7', title: 'Create GitHub repo', description: '', status: 'done', assignee: 'Doha H.', tag: 'docs' }
+    ];
+
+    let currentPage = 'board';
+    let currentMode = 'create';
+
+    // NAVIGUER ENTRE LES PAGES
+    function switchPage(page) {
+      currentPage = page;
+
+      // Masquer toutes les vues
+      document.querySelectorAll('.page-content').forEach(el => el.classList.add('hidden'));
+
+      // Réinitialiser les styles du menu
+      const navs = ['board', 'list', 'my-tasks'];
+      navs.forEach(n => {
+        const btn = document.getElementById(`nav-${n}`);
+        btn.className = "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-taskoff-subtext hover:bg-slate-50 font-medium text-sm transition";
+      });
+
+      // Activer le bouton du menu et la vue
+      const activeBtn = document.getElementById(`nav-${page}`);
+      activeBtn.className = "w-full flex items-center gap-3 px-3 py-2 rounded-lg bg-blue-50 text-taskoff-primary font-medium text-sm transition";
+
+      const titleMap = { 'board': 'Board', 'list': 'List view', 'my-tasks': 'My tasks (Doha H.)' };
+      document.getElementById('pageTitle').innerText = titleMap[page];
+
+      if (page === 'board') {
+        document.getElementById('page-board').classList.remove('hidden');
+        renderBoard();
+      } else {
+        document.getElementById('page-list').classList.remove('hidden');
+        renderList(page === 'my-tasks');
+      }
+    }
+
+    // RENDU DU BOARD (KANBAN)
+    function renderBoard() {
+      const columns = {
+        'todo': document.getElementById('col-todo'),
+        'in-progress': document.getElementById('col-in-progress'),
+        'in-review': document.getElementById('col-in-review'),
+        'done': document.getElementById('col-done')
+      };
+
+      Object.values(columns).forEach(col => col.innerHTML = '');
+      const counts = { 'todo': 0, 'in-progress': 0, 'in-review': 0, 'done': 0 };
+
+      tasks.forEach(task => {
+        counts[task.status]++;
+        const card = document.createElement('div');
+        card.className = "bg-white p-4 rounded-xl border border-taskoff-border shadow-sm hover:shadow-md transition cursor-pointer flex flex-col justify-between gap-3";
+        card.onclick = () => openModal('edit', task.id);
+
+        card.innerHTML = `
+          <div>
+            <h3 class="text-sm font-semibold text-taskoff-text mb-1">${escapeHtml(task.title)}</h3>
+            ${task.description ? `<p class="text-xs text-taskoff-subtext line-clamp-2 mb-2">${escapeHtml(task.description)}</p>` : ''}
+          </div>
+          <div class="flex items-center justify-between text-xs pt-2 border-t border-slate-50">
+            <span class="bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-medium">${escapeHtml(task.tag || 'general')}</span>
+            <span class="text-taskoff-subtext font-medium">${escapeHtml(task.assignee)}</span>
+          </div>
+        `;
+        if (columns[task.status]) columns[task.status].appendChild(card);
+      });
+
+      document.getElementById('count-todo').innerText = counts['todo'];
+      document.getElementById('count-in-progress').innerText = counts['in-progress'];
+      document.getElementById('count-in-review').innerText = counts['in-review'];
+      document.getElementById('count-done').innerText = counts['done'];
+      lucide.createIcons();
+    }
+
+    // RENDU DE LA VUE LISTE OU MES TÂCHES
+    function renderList(onlyMine = false) {
+      const tbody = document.getElementById('listTableBody');
+      tbody.innerHTML = '';
+
+      const filteredTasks = onlyMine ? tasks.filter(t => t.assignee === 'Doha H.') : tasks;
+
+      filteredTasks.forEach(task => {
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-slate-50 cursor-pointer transition";
+        tr.onclick = () => openModal('edit', task.id);
+
+        const statusLabels = {
+          'todo': 'To do',
+          'in-progress': 'In progress',
+          'in-review': 'In review',
+          'done': 'Done'
+        };
+
+        tr.innerHTML = `
+          <td class="px-6 py-4 font-semibold text-taskoff-text">${escapeHtml(task.title)}</td>
+          <td class="px-6 py-4"><span class="text-xs bg-slate-100 text-slate-700 px-2 py-1 rounded font-medium">${statusLabels[task.status]}</span></td>
+          <td class="px-6 py-4 text-taskoff-subtext">${escapeHtml(task.tag || '-')}</td>
+          <td class="px-6 py-4 font-medium text-taskoff-text">${escapeHtml(task.assignee)}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      lucide.createIcons();
+    }
+
+    // GESTION DES MODALES
+    function openModal(mode, taskId = null) {
+      currentMode = mode;
+      const modal = document.getElementById('taskModal');
+      const title = document.getElementById('modalTitle');
+      const saveBtn = document.getElementById('saveBtn');
+      const deleteBtn = document.getElementById('deleteBtn');
+
+      modal.classList.remove('hidden');
+
+      if (mode === 'edit' && taskId) {
+        const task = tasks.find(t => t.id === taskId);
+        if (!task) return;
+
+        title.innerText = "Edit task";
+        saveBtn.innerText = "Save changes";
+        deleteBtn.classList.remove('hidden');
+
+        document.getElementById('taskId').value = task.id;
+        document.getElementById('taskTitleInput').value = task.title;
+        document.getElementById('taskDescInput').value = task.description;
+        document.getElementById('taskStatusSelect').value = task.status;
+        document.getElementById('taskAssigneeSelect').value = task.assignee;
+        document.getElementById('taskTagInput').value = task.tag;
+      } else {
+        title.innerText = "New task";
+        saveBtn.innerText = "Create task";
+        deleteBtn.classList.add('hidden');
+        document.getElementById('taskForm').reset();
+        document.getElementById('taskId').value = '';
+      }
+    }
+
+    function closeModal() {
+      document.getElementById('taskModal').classList.add('hidden');
+    }
+
+    function handleFormSubmit(e) {
+      e.preventDefault();
+      const id = document.getElementById('taskId').value;
+      const title = document.getElementById('taskTitleInput').value;
+      const description = document.getElementById('taskDescInput').value;
+      const status = document.getElementById('taskStatusSelect').value;
+      const assignee = document.getElementById('taskAssigneeSelect').value;
+      const tag = document.getElementById('taskTagInput').value;
+
+      if (currentMode === 'edit') {
+        tasks = tasks.map(t => t.id === id ? { id, title, description, status, assignee, tag } : t);
+      } else {
+        tasks.push({ id: Date.now().toString(), title, description, status, assignee, tag });
+      }
+
+      switchPage(currentPage);
+      closeModal();
+    }
+
+    function deleteTask() {
+      const id = document.getElementById('taskId').value;
+      tasks = tasks.filter(t => t.id !== id);
+      switchPage(currentPage);
+      closeModal();
+    }
+
+    function escapeHtml(str) {
+      return str ? str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;") : '';
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      switchPage('board');
+    });
+  </script>
+</body>
+</html>
