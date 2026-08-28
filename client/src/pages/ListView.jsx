@@ -50,9 +50,9 @@ function ListView() {
   if (tasks.length === 0) return <EmptyState />;
 
   return (
-    <section className="overflow-x-auto bg-white">
-      <div className="min-w-[700px]">
-        <div className="grid grid-cols-[minmax(260px,1fr)_132px_94px_72px] items-center gap-3 border-b border-gray-100 px-5 py-3 text-[10px] font-medium uppercase tracking-wide text-muted sticky top-0 bg-paper">
+    <section className="overflow-auto h-full scroll-bar px-8 pb-8">
+      <div className="min-w-[700px] divide-y divide-muted/10 [&>*:nth-child(2)]:border-none">
+        <div className="grid grid-cols-[minmax(260px,1fr)_132px_94px_72px] items-center gap-3 px-5 py-3 text-[10px] font-medium uppercase tracking-wide text-muted sticky top-0 z-10 bg-paper border-b border-muted/10">
           <span>Task</span>
           <span>Status</span>
           <span>Tag</span>

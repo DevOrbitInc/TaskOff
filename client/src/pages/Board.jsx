@@ -31,7 +31,7 @@ export default function Board() {
       {isLoading ? (
         <p className="text-sm text-muted">Loading tasks…</p>
       ) : (
-        <div className="grid min-w-[900px] grid-cols-4 gap-6">
+        <div className="grid min-w-[900px] grid-cols-4 gap-6 pt-8">
           {columns.map((col) => {
             const colTasks = tasks.filter((t) => t.status === col.key);
             return (
@@ -66,7 +66,7 @@ export default function Board() {
                             {task.tag || "general"}
                           </span>
                           <span
-                            className={`flex h-6 w-6 items-center justify-center rounded-full text-[11px] font-semibold ${colorFor(
+                            className={`flex h-6 w-6 items-center justify-center rounded-lg text-[11px] font-semibold leading-none ${colorFor(
                               name,
                             )}`}
                           >
@@ -79,9 +79,9 @@ export default function Board() {
 
                   <button
                     onClick={onCreate}
-                    className="rounded-xl border border-dashed border-section py-2.5 text-sm font-medium text-muted hover:bg-paper gap-1"
+                    className="rounded-xl border border-dashed border-muted/30 py-2.5 text-sm font-medium text-muted hover:bg-paper gap-2 flex items-center justify-center"
                   >
-                    <PlusIcon className="size-4" strokeWidth={3} />
+                    <PlusIcon className="size-3" strokeWidth={3} />
                     <span>Add task</span>
                   </button>
                 </div>

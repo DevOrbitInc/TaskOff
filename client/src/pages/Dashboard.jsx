@@ -166,13 +166,13 @@ export default function Dashboard() {
   return (
     <>
       <AppShell
-        user={user}
         tasksLength={tasks.length}
         error={error}
         onCreate={openCreateModal}
       >
         {/* This is the slot where all the view modes will render */}
         {/* passing the props down through the context of outlet available for dashboard sub paths */}
+
         <Outlet
           context={{
             tasks,

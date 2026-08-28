@@ -1,3 +1,4 @@
+import useOutsideClick from "@/hooks/useOutsideClick";
 import Button from "./Button";
 import { Field, FieldLabel } from "./Field";
 import { Input } from "./Input";
@@ -16,9 +17,14 @@ export default function Model({ props }) {
     isSaving,
   } = props;
 
+  const modelRef = useOutsideClick(onClose);
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center px-4 bg-ink/40">
-      <div className="w-full max-w-lg p-6 shadow-2xl rounded-xl bg-paper">
+    <div className="fixed inset-0 z-50 flex items-center justify-center px-4 bg-ink/40 backdrop-blur-sm">
+      <div
+        ref={modelRef}
+        className="w-full max-w-lg p-6 shadow-2xl rounded-xl bg-paper"
+      >
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl font-bold text-ink">
             {mode === "edit" ? "Edit task" : "New task"}
