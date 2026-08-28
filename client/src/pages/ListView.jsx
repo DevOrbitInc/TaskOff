@@ -52,7 +52,7 @@ function ListView() {
   return (
     <section className="overflow-x-auto bg-white">
       <div className="min-w-[700px]">
-        <div className="grid grid-cols-[minmax(260px,1fr)_132px_94px_72px] items-center gap-3 border-b border-gray-100 px-5 py-3 text-[10px] font-medium uppercase tracking-wide text-muted">
+        <div className="grid grid-cols-[minmax(260px,1fr)_132px_94px_72px] items-center gap-3 border-b border-gray-100 px-5 py-3 text-[10px] font-medium uppercase tracking-wide text-muted sticky top-0 bg-paper">
           <span>Task</span>
           <span>Status</span>
           <span>Tag</span>

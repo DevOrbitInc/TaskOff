@@ -1,33 +1,33 @@
-import { useState, useContext } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import AuthContext from '../context/AuthContext.jsx'
-import Button from '../components/ui/Button'
-import { Field, FieldLabel } from '../components/ui/Field'
-import { Input } from '../components/ui/Input'
+import { useState, useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import AuthContext from "../context/AuthContext.jsx";
+import Button from "../components/ui/Button";
+import { Field, FieldLabel } from "../components/ui/Field";
+import { Input } from "../components/ui/Input";
 
 function Login() {
-  const { login, loading, error } = useContext(AuthContext)
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [localError, setLocalError] = useState('')
-  const navigate = useNavigate()
+  const { login, loading, error } = useContext(AuthContext);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [localError, setLocalError] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
-    event.preventDefault()
-    setLocalError('')
+    event.preventDefault();
+    setLocalError("");
 
     if (!email || !password) {
-      setLocalError('Please provide both email and password.')
-      return
+      setLocalError("Please provide both email and password.");
+      return;
     }
 
     try {
-      await login({ email, password })
-      navigate('/board')
+      await login({ email, password });
+      navigate("/dashboard");
     } catch (err) {
-      setLocalError(err.message)
+      setLocalError(err.message);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen w-full flex">
@@ -36,7 +36,7 @@ function Login() {
         className="hidden lg:flex w-1/2 flex-col justify-center px-16 bg-ink text-white relative overflow-hidden"
         style={{
           backgroundImage:
-            'radial-gradient(ellipse 500px 400px at 70% 20%, rgba(59,91,253,0.35), transparent 70%)',
+            "radial-gradient(ellipse 500px 400px at 70% 20%, rgba(59,91,253,0.35), transparent 70%)",
         }}
       >
         <span className="mb-6 inline-flex w-fit items-center rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-signal">
@@ -66,7 +66,7 @@ function Login() {
               <Input
                 id="email"
                 type="email"
-                placeholder="you@taskoff.dev"
+                placeholder="your email"
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
                 autoComplete="email"
@@ -78,7 +78,7 @@ function Login() {
               <Input
                 id="password"
                 type="password"
-                placeholder="••••••"
+                placeholder="••••••••"
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
                 autoComplete="current-password"
@@ -98,11 +98,11 @@ function Login() {
             disabled={loading}
             className="mt-6 w-full"
           >
-            {loading ? 'Signing in...' : 'Log in'}
+            {loading ? "Signing in..." : "Log in"}
           </Button>
 
           <p className="mt-4 text-center text-sm text-muted">
-            No account yet?{' '}
+            No account yet?{" "}
             <Link to="/register" className="font-semibold text-signal">
               Create one
             </Link>
@@ -110,7 +110,7 @@ function Login() {
         </form>
       </div>
     </div>
-  )
+  );
 }
 
-export default Login
+export default Login;

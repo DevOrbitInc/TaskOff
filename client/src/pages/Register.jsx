@@ -65,7 +65,7 @@ function Register() {
               <Input
                 id="fullName"
                 type="text"
-                placeholder="Ibrahim El Amrani"
+                placeholder="your full name"
                 value={fullName}
                 onChange={(event) => setFullName(event.target.value)}
                 autoComplete="name"
@@ -77,7 +77,7 @@ function Register() {
               <Input
                 id="email"
                 type="email"
-                placeholder="you@taskoff.dev"
+                placeholder="your email"
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
                 autoComplete="email"
