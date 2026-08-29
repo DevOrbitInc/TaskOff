@@ -1,4 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
+import { cn } from "@/utils/utils";
 import { cva } from "class-variance-authority";
 
 export const buttonVariance = cva(
@@ -32,7 +33,7 @@ export default function Button({
   ...props
 }) {
   return (
-    <button className={buttonVariance({ variant, size, className })} {...props}>
+    <button className={cn(buttonVariance({ variant, size }), className)} {...props}>
       {children}
     </button>
   );
